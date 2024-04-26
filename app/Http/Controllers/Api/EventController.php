@@ -11,13 +11,18 @@ use Illuminate\Http\Request;
 class EventController extends Controller
 {
     use CanLoadRelationships;
+
+    private readonly array $relations;
+
+    public function __construct(array $relations = ['user', 'attendees', 'attendees.user']) {
+        $this->relations = $relations;
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $relations =['user', 'attendees', 'attendees.user'];
-        $query = $this->loadRelationships(Event::query(), $relations);
+        $query = $this->loadRelationships(Event::query());
 
 
 
