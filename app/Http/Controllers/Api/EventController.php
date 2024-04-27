@@ -7,16 +7,14 @@ use App\Http\Resources\EventResource;
 use App\Http\Traits\CanLoadRelationships;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
     use CanLoadRelationships;
 
-    private readonly array $relations;
+    private array $relations = ['user', 'attendees', 'attendees.user'];
 
-    public function __construct(array $relations = ['user', 'attendees', 'attendees.user']) {
-        $this->relations = $relations;
-    }
     /**
      * Display a listing of the resource.
      */
@@ -42,7 +40,7 @@ class EventController extends Controller
                 'start_time' => 'required|date',
                 'end_time' => 'required|date|after:start_time  '
             ]),
-            'user_id' => 1
+            'user_id' => Auth::id()
         ]);
 
         return new EventResource($this->loadRelationships($event));
