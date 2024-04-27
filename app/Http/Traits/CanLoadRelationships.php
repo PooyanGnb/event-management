@@ -5,13 +5,14 @@ namespace App\Http\Traits;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Contracts\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 trait CanLoadRelationships
 {
     public function loadRelationships(
-        Model|Builder|QueryBuilder $for,
+        Model|Builder|QueryBuilder|HasMany $for,
         ?array $relations = null
-    ) : Model|Builder|QueryBuilder {
+    ) : Model|Builder|QueryBuilder|HasMany {
 
         // first in checks in $relations is given in argument, if wasn't given, then it checks for $relations property in where trait
         // being used. if it's not ther, then it's value would be an empty array ( [] )
