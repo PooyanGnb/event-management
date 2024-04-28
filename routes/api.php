@@ -16,5 +16,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 Route::apiResource('events', EventController::class)->only(['index', 'show']);
 Route::apiResource('events', EventController::class)->except(['index', 'show'])->middleware('auth:sanctum');
 Route::apiResource('events.attendees', AttendeeController::class)
-    ->scoped()->except(['update']);
+    ->scoped()->except(['update', 'index', 'show'])->middleware('auth:sanctum');
+Route::apiResource('events.attendees', AttendeeController::class)
+    ->scoped()->only([ 'index', 'show']);
 
