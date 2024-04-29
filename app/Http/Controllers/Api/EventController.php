@@ -13,18 +13,19 @@ use Illuminate\Support\Facades\Gate;
 class EventController extends Controller
 {
     use CanLoadRelationships;
+    
 
     private array $relations = ['user', 'attendees', 'attendees.user'];
+
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        Gate::authorize('viewAny');
+
         $query = $this->loadRelationships(Event::query());
-
-
-
 
         return EventResource::collection($query->latest()->paginate());
     }
@@ -33,7 +34,8 @@ class EventController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    { 
+        
         $event = Event::create([
             ...$request->validate([
                 'name' => 'required|string|max:255',
@@ -64,7 +66,7 @@ class EventController extends Controller
         //     abort(403, 'You are not allowed to update this event.');
         // }
 
-    Gate::authorize('update-event', $event);
+    Gate::authorize('update', $event);
 
         $event->update($request->validate([
             'name' => 'sometimes|string|max:255',
