@@ -11,17 +11,17 @@ class AttendeePolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user)
+    public function viewAny(?User $user)
     {
-        //
+        return true;
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Attendee $attendee)
+    public function view(?User $user, Attendee $attendee)
     {
-        //
+        return true;
     }
 
     /**

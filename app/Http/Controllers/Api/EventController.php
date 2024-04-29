@@ -23,7 +23,7 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        Gate::authorize('viewAny');
+        Gate::authorize('viewAny', Event::class);
 
         $query = $this->loadRelationships(Event::query());
 
@@ -35,7 +35,7 @@ class EventController extends Controller
      */
     public function store(Request $request)
     { 
-        
+        Gate::authorize('create', Event::class);
         $event = Event::create([
             ...$request->validate([
                 'name' => 'required|string|max:255',
@@ -43,7 +43,7 @@ class EventController extends Controller
                 'start_time' => 'required|date',
                 'end_time' => 'required|date|after:start_time  '
             ]),
-            'user_id' => Auth::id()
+            'user_id' => $request->user()->id
         ]);
 
         return new EventResource($this->loadRelationships($event));
@@ -54,6 +54,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
+        Gate::authorize('view', $event);
         return new EventResource($this->loadRelationships($event));
     }
 
@@ -83,6 +84,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
+        Gate::authorize('delete', $event);
         $event->delete();
 
         return response(status: 204);

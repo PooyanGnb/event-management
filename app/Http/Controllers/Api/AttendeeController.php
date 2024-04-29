@@ -23,6 +23,7 @@ class AttendeeController extends Controller
 
     public function index(Event $event)
     {
+        Gate::authorize('viewAny', Attendee::class);
         $attendees = $this->loadRelationships($event->attendees()->latest());
 
         return AttendeeResource::collection($attendees->paginate());
@@ -33,10 +34,10 @@ class AttendeeController extends Controller
      */
     public function store(Request $request, Event $event)
     {
-        
+        Gate::authorize('create', Attendee::class);
 
         $attendee = $this->loadRelationships($event->attendees()->create([
-            'user_id' => Auth::id(),
+            'user_id' => $request->user()->id,
         ]));
 
         return new AttendeeResource($attendee);
@@ -47,6 +48,7 @@ class AttendeeController extends Controller
      */
     public function show(Event $event, Attendee $attendee)
     {
+        Gate::authorize('view', $attendee);
         return new AttendeeResource($this->loadRelationships($attendee));
     }
 
